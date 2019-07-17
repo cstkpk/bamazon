@@ -26,7 +26,7 @@ function runDisplay() {
     var display = "SELECT item_id, product_name, price FROM products;";
     connection.query(display, function(err, res) {
         if (err) throw err;
-        console.log(res);
+        // console.log(res);
         
         var columns = columnify(res, {
             columnSplitter: ' | ',
@@ -41,62 +41,54 @@ function runDisplay() {
 var idArr = [];
 
 function runSearch() {
-    // var query = "SELECT item_id FROM products;";
-    // connection.query(query, function(err, res) {
-    //     if (err) throw err;
-    //     for (var i = 0; i < res.length; i++) {
-    //         idArr.push(res[i].item_id);
-    //     }
-    //     console.log(idArr);
-    // })
-    inquirer
-      .prompt([
-        {
-            name: "purchase",
-            type: "input",
-            message: "Please choose the id of the item you would like to purchase:"
-        },
-        // {
-        //     name: "purchase",
-        //     type: "list",
-        //     message: "Please choose the id of the item you would like to purchase:",
-        //     choices: [
-        //         idArr
-        //     ]
-        // },
-        {
-            name: "quantity",
-            type: "input",
-            message: "How many units would you like to purchase?"
+    var query = "SELECT item_id FROM products;";
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            idArr.push(res[i].item_id);
         }
-      ])
-      .then(function(answer) {
-        var query = "SELECT * FROM products WHERE item_id = ?;";
-        connection.query(query, [answer.purchase], function(err, res) {
-            if (err) throw err;
-            // console.log(res);
-            // console.log(res[0].stock_quantity);
-            if (answer.quantity > res[0].stock_quantity) {
-                console.log("Sorry! It looks like we don't have enough of that item to fulfill your order.");
-                exit();
+        // console.log(idArr);
+        inquirer
+        .prompt([
+            {
+                name: "purchase",
+                type: "list",
+                message: "Please choose the id of the item you would like to purchase:",
+                choices: idArr
+            },
+            {
+                name: "quantity",
+                type: "input",
+                message: "How many units would you like to purchase?"
             }
-            else {
-                console.log("Congratulations! Here are " + answer.quantity + " " + res[0].product_name + "!");
-                var query2 = "UPDATE products SET stock_quantity = stock_quantity-? WHERE item_id = ?;";
-                connection.query(query2, [answer.quantity, answer.purchase], function(err, res) {
-                    if (err) throw err;
-                })
-                var query3 = "SELECT * FROM products WHERE item_id = ?;";
-                connection.query(query3, [answer.purchase], function(err, res) {
-                    if (err) throw err;
-                    // console.log(res);
-                    var cost = res[0].price * answer.quantity;
-                    console.log("Your total cost is: $" + cost);
+        ])
+        .then(function(answer) {
+            var query = "SELECT * FROM products WHERE item_id = ?;";
+            connection.query(query, [answer.purchase], function(err, res) {
+                if (err) throw err;
+                // console.log(res);
+                // console.log(res[0].stock_quantity);
+                if (answer.quantity > res[0].stock_quantity) {
+                    console.log("Sorry! It looks like we don't have enough of that item to fulfill your order.");
                     exit();
-                })
-            }
-            // connection.end();
-      });
+                }
+                else {
+                    console.log("Congratulations! Here are " + answer.quantity + " " + res[0].product_name + "!");
+                    var query2 = "UPDATE products SET stock_quantity = stock_quantity-? WHERE item_id = ?;";
+                    connection.query(query2, [answer.quantity, answer.purchase], function(err, res) {
+                        if (err) throw err;
+                    });
+                    var query3 = "SELECT * FROM products WHERE item_id = ?;";
+                    connection.query(query3, [answer.purchase], function(err, res) {
+                        if (err) throw err;
+                        // console.log(res);
+                        var cost = res[0].price * answer.quantity;
+                        console.log("Your total cost is: $" + cost);
+                        exit();
+                    });
+                }
+            });
+        })
     })
 }
 
