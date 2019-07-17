@@ -38,8 +38,9 @@ function runDisplay() {
     });
 }
 
+// Variable for first prompt question
 var idArr = [];
-
+// Function for customer to choose which item and quantity to buy
 function runSearch() {
     var query = "SELECT item_id FROM products;";
     connection.query(query, function(err, res) {
@@ -86,12 +87,13 @@ function runSearch() {
                         console.log("Your total cost is: $" + cost);
                         exit();
                     });
-                }
+                };
             });
-        })
-    })
-}
+        });
+    });
+};
 
+// Function to allow customer to either continue shopping or exit out of node
 function exit() {
     inquirer
     .prompt({
@@ -107,6 +109,6 @@ function exit() {
         else {
             console.log("Goodbye!");
             connection.end();
-        }
-    })
-}
+        };
+    });
+};
