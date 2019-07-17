@@ -78,6 +78,7 @@ function runSearch() {
             // console.log(res[0].stock_quantity);
             if (answer.quantity > res[0].stock_quantity) {
                 console.log("Sorry! It looks like we don't have enough of that item to fulfill your order.");
+                exit();
             }
             else {
                 console.log("Congratulations! Here are " + answer.quantity + " " + res[0].product_name + "!");
@@ -91,13 +92,29 @@ function runSearch() {
                     // console.log(res);
                     var cost = res[0].price * answer.quantity;
                     console.log("Your total cost is: $" + cost);
+                    exit();
                 })
             }
-            connection.end();
+            // connection.end();
       });
     })
 }
 
-// function exit() {
-    
-// }
+function exit() {
+    inquirer
+    .prompt({
+        type: "confirm",
+        message: "Would you like to place another order?",
+        name: "confirm",
+        default: true
+    })
+    .then(function(answer){
+        if (answer.confirm) {
+            runSearch();
+        }
+        else {
+            console.log("Goodbye!");
+            connection.end();
+        }
+    })
+}
