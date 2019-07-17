@@ -54,7 +54,7 @@ function runSearch() {
             {
                 name: "purchase",
                 type: "list",
-                message: "Please choose the id of the item you would like to purchase:",
+                message: "Please choose the ID of the item you would like to purchase:",
                 choices: idArr
             },
             {
