@@ -20,3 +20,5 @@ SELECT stock_quantity FROM products WHERE item_id = 1;
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Bananas", "Food & Drink", 1.00, 70);
+
+UPDATE products SET stock_quantity = stock_quantity-2 WHERE item_id = 1;
