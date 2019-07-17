@@ -60,7 +60,13 @@ function runSearch() {
             {
                 name: "quantity",
                 type: "input",
-                message: "How many units would you like to purchase?"
+                message: "How many units would you like to purchase?",
+                validate: function(value) {
+                    if (isNaN(value) === false && value > 0) {
+                        return true;
+                    }
+                    return false;
+                }
             }
         ])
         .then(function(answer) {

@@ -48,7 +48,7 @@ function mainMenu() {
                 addInventory();
                 break;
             case "Add new product":
-                // Function
+                addProduct();
                 break;
             case "Exit":
                 console.log("Goodbye!");
@@ -86,6 +86,7 @@ function displayProducts() {
         var columns = columnify(res, {
             columnSplitter: " | ",
         })
+        console.log("-----------------------------");
         console.log("All products for sale:");
         console.log("-----------------------------");
         console.log(columns);
@@ -93,20 +94,31 @@ function displayProducts() {
     });
 };
 
+// If the manager chooses "View low inventory," display all products with inventory < 5
 function lowInventory() {
     var inventory = "SELECT * FROM products WHERE stock_quantity < 5;";
     connection.query(inventory, function(err, res) {
         if (err) throw err;
-        var columns = columnify(res, {
-            columnSplitter: " | ",
-        })
-        console.log("Products with fewer than 5 in stock:");
-        console.log("-----------------------------");
-        console.log(columns);
-        backToMenu();
+        if (res[0]) {
+            var columns = columnify(res, {
+                columnSplitter: " | ",
+            })
+            console.log("-----------------------------");
+            console.log("Products with fewer than 5 in stock:");
+            console.log("-----------------------------");
+            console.log(columns);
+            backToMenu();
+        }
+        else {
+            console.log("-----------------------------");
+            console.log("There are currently no items low in stock.")
+            console.log("-----------------------------");
+            backToMenu();
+        }
     });
 };
 
+// If the manager chooses "Add to inventory," prompt for information about which item and quantity and update table
 var itemArr = [];
 function addInventory() {
     var query = "SELECT product_name FROM products;";
@@ -126,18 +138,95 @@ function addInventory() {
                 {
                     name: "quantity",
                     type: "input",
-                    message: "How many would you like to purchase?",
+                    message: "How many would you like to add to stock?",
                     validate: function(value) {
-                        if (isNaN(value) === false) {
-                          return true;
+                        if (isNaN(value) === false && value > 0) {
+                            return true;
                         }
                         return false;
                     }
                 }
             ])
             .then(function(answer) {
-
+                var query2 = "SELECT * FROM products WHERE product_name = ?;";
+                connection.query(query2, [answer.item], function(err, res) {
+                    if (err) throw err;
+                    var query3 = "UPDATE products SET stock_quantity = stock_quantity+? WHERE product_name = ?;";
+                    connection.query(query3, [answer.quantity, answer.item], function(err, res) {
+                        if (err) throw err;
+                        console.log("-----------------------------");
+                        console.log("You've added " + answer.quantity + " " + answer.item + "to stock.");
+                        console.log("-----------------------------");
+                        // var cost = answer.quantity * res[0].price;
+                        // console.log("Your total cost is $" + cost + ".");
+                        backToMenu();
+                    });
+                });
             });
         
+    });
+};
+
+// If manager chooses "Add new product," prompt for product information and add to table
+function addProduct() {
+   inquirer
+    .prompt([
+        {
+            name: "product",
+            type: "input",
+            message: "What is the name of the product you'd like to add?"
+        },
+        {
+            name: "department",
+            type: "input",
+            message: "What department does this product belong to?" 
+        },
+        {
+            name: "price",
+            type: "input",
+            message: "How much does this product cost?",
+            validate: function(value) {
+                if (isNaN(value) === false && value > 0) {
+                    return true;
+                }
+                return false;
+            }
+        },
+        {
+            name: "quantity",
+            type: "input",
+            message: "How many would you like to stock?",
+            validate: function(value) {
+                if (isNaN(value) === false && value > 0) {
+                    return true;
+                }
+                return false;
+            }
+        }
+    ]) 
+    .then(function(answer) {
+        var query = "INSERT INTO products SET ?;";
+        connection.query(query, 
+            [{
+                product_name: answer.product,
+                department_name: answer.department,
+                price: answer.price,
+                stock_quantity: answer.quantity
+            }], 
+            function(err, res) {
+            if (err) throw err;
+            var query2 = "SELECT * FROM products WHERE product_name = ?;";
+            connection.query(query2, [answer.product], function(err, res) {
+                if (err) throw err;
+                var columns = columnify(res, {
+                    columnSplitter: " | ",
+                })
+                console.log("-----------------------------");
+                console.log("You just added:");
+                console.log("-----------------------------");
+                console.log(columns);
+                backToMenu();
+            });
+        });
     });
 };
