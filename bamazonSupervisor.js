@@ -74,15 +74,8 @@ function productSales() {
     var query = "SELECT * FROM departments INNER JOIN products ON products.department_name = departments.department_name;";
     connection.query(query, function(err, res) {
         if (err) throw err;
-        var query2 = "UPDATE departments SET total_profit = total_profit + ?;";
-        var departmentSales = 
-        
-        var profitArr = [];
-        for (var i = 0; i < res[i]; i++) {
-            var test = res[i].overhead_costs - res[i].product_sales;
-            profitArr.push(test);
-        }
-        connection.query(query2, profitArr, function(err, res) {
+        var query2 = "SELECT department_id, department_name, overhead_costs, SUM(product_sales) AS product_sales, SUM(product_sales - overhead_costs) AS total_profit FROM products INNER JOIN departments USING (department_name) GROUP BY  products.department_name;";
+        connection.query(query2, function(err, res) {
             if (err) throw err;
             var columns = columnify(res, {
                 columnSplitter: " | ",

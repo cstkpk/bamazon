@@ -40,7 +40,7 @@ CREATE TABLE departments (
 department_id INT NOT NULL AUTO_INCREMENT,
 department_name VARCHAR(20),
 overhead_costs DECIMAL(10,2),
-total_profit DECIMAL(10,2) DEFAULT 0.00,
+-- total_profit DECIMAL(10,2) DEFAULT 0.00,
 PRIMARY KEY (department_id)
 );
 
@@ -49,6 +49,19 @@ VALUES ("Food & Drink", 50000.00),("Plants", 10000.00), ("Household Items", 4600
 
 SELECT * FROM departments;
 
+--
+SELECT department_id, department_name, overhead_costs,
+           SUM(product_sales) AS product_sales,
+           SUM(overhead_costs - product_sales) AS total_profit
+FROM products
+INNER JOIN departments
+USING (department_name)
+GROUP BY  products.department_name;
+--
+
+
 SELECT * FROM departments INNER JOIN products ON products.department_name = departments.department_name;
+
+SELECT * FROM departments INNER JOIN products ON products.department_name = departments.department_name GROUP BY products.department_name;
 
 SELECT department_id, departments.department_name, overhead_costs, product_sales FROM departments INNER JOIN products ON products.department_name = departments.department_name;
