@@ -11,6 +11,7 @@ product_name VARCHAR(30) NOT NULL,
 department_name VARCHAR(20),
 price DECIMAL(10,2),
 stock_quantity INT(6),
+product_sales DECIMAL(10,2) DEFAULT 0.00,
 PRIMARY KEY (item_id)
 );
 

@@ -90,6 +90,10 @@ function runSearch() {
                         if (err) throw err;
                         // console.log(res);
                         var cost = res[0].price * answer.quantity;
+                        var query4 = "UPDATE products SET product_sales = product_sales + ? WHERE item_id = ?;";
+                        connection.query(query4, [cost, answer.purchase], function(err, res) {
+                            if (err) throw err;
+                        })
                         console.log("Your total cost is: $" + cost);
                         exit();
                     });
