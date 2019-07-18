@@ -33,3 +33,22 @@ VALUES ("Bananas", "Food & Drink", 1.00, 70),
 UPDATE products SET stock_quantity = stock_quantity-2 WHERE item_id = 1;
 
 UPDATE products SET stock_quantity = stock_quantity+2 WHERE item_id = 2;
+
+DROP TABLE departments;
+
+CREATE TABLE departments (
+department_id INT NOT NULL AUTO_INCREMENT,
+department_name VARCHAR(20),
+overhead_costs DECIMAL(10,2),
+total_profit DECIMAL(10,2) DEFAULT 0.00,
+PRIMARY KEY (department_id)
+);
+
+INSERT INTO departments (department_name, overhead_costs)
+VALUES ("Food & Drink", 50000.00),("Plants", 10000.00), ("Household Items", 46000.00);
+
+SELECT * FROM departments;
+
+SELECT * FROM departments INNER JOIN products ON products.department_name = departments.department_name;
+
+SELECT department_id, departments.department_name, overhead_costs, product_sales FROM departments INNER JOIN products ON products.department_name = departments.department_name;
