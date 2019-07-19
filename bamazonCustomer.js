@@ -26,14 +26,10 @@ function runDisplay() {
     var display = "SELECT item_id AS 'Item ID', product_name AS 'Product Name', price AS 'Price' FROM products;";
     connection.query(display, function(err, res) {
         if (err) throw err;
-        // console.log(res);
-        
         var columns = columnify(res, {
             columnSplitter: ' | ',
-            // paddingChr: '.'
         })
         console.log(columns)
-        // connection.end();
         runSearch();
     });
 }
@@ -48,7 +44,6 @@ function runSearch() {
         for (var i = 0; i < res.length; i++) {
             idArr.push(res[i].item_id);
         }
-        // console.log(idArr);
         inquirer
         .prompt([
             {
@@ -73,8 +68,6 @@ function runSearch() {
             var query = "SELECT * FROM products WHERE item_id = ?;";
             connection.query(query, [answer.purchase], function(err, res) {
                 if (err) throw err;
-                // console.log(res);
-                // console.log(res[0].stock_quantity);
                 if (answer.quantity > res[0].stock_quantity) {
                     console.log("\nSorry! It looks like we don't have enough of that item to fulfill your order.\n");
                     exit();
@@ -88,7 +81,6 @@ function runSearch() {
                     var query3 = "SELECT * FROM products WHERE item_id = ?;";
                     connection.query(query3, [answer.purchase], function(err, res) {
                         if (err) throw err;
-                        // console.log(res);
                         var cost = res[0].price * answer.quantity;
                         var query4 = "UPDATE products SET product_sales = product_sales + ? WHERE item_id = ?;";
                         connection.query(query4, [cost, answer.purchase], function(err, res) {

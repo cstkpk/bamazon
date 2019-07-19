@@ -21,6 +21,7 @@ connection.connect(function(err) {
     supervisorMenu();
 });
 
+// Gives the supervisor all of their action choices, and based on their answer, runs the appropriate function
 function supervisorMenu() {
     inquirer
         .prompt({
@@ -49,7 +50,7 @@ function supervisorMenu() {
         });
 };
 
-// Asks the user whether or not they want to return to the main menu
+// Asks the supervisor whether or not they want to return to the main menu
 function backToMenu() {
     inquirer
         .prompt({
@@ -120,7 +121,6 @@ function newDepartment() {
             function(err, res) {
                 if (err) throw err;
             });
-            // If leaving total_profit in table, change * to include only id, name, and overhead costs
             var depQuery2 = "SELECT * FROM departments WHERE department_name = ?;";
             connection.query(depQuery2, [answer.department], function(err, res) {
                 var columns = columnify(res, {

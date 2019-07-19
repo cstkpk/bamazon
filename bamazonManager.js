@@ -21,7 +21,7 @@ connection.connect(function(err) {
     mainMenu();
 });
 
-// Gives the user all of their action choices, and based on their answer, runs to appropriate function
+// Gives the manager all of their action choices, and based on their answer, runs the appropriate function
 function mainMenu() {
    inquirer
     .prompt({
@@ -58,7 +58,7 @@ function mainMenu() {
     });
 };
 
-// Asks the user whether or not they want to return to the main menu
+// Asks the manager whether or not they want to return to the main menu
 function backToMenu() {
     inquirer
         .prompt({
@@ -157,8 +157,6 @@ function addInventory() {
                         console.log("-----------------------------");
                         console.log("You've added " + answer.quantity + " " + answer.item + " to stock.");
                         console.log("-----------------------------");
-                        // var cost = answer.quantity * res[0].price;
-                        // console.log("Your total cost is $" + cost + ".");
                         backToMenu();
                     });
                 });
