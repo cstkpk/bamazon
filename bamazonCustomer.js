@@ -1,3 +1,5 @@
+// Hello
+
 var mysql = require("mysql");
 var columnify = require('columnify');
 var inquirer = require("inquirer");
