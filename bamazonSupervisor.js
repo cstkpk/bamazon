@@ -86,9 +86,9 @@ function productSales() {
             console.log("-----------------------------");
             console.log(columns);
             backToMenu();
-        })
-    })
-}
+        });
+    });
+};
 
 // If supervisor chooses "Create a new department," prompt for information and add to table
 function newDepartment() {
@@ -97,7 +97,7 @@ function newDepartment() {
             {
                 name: "department",
                 type: "input",
-                message: "What is the name of the department you want to create?"
+                message: "What is the name of the department you want to create?",
             },
             {
                 name: "overhead",
