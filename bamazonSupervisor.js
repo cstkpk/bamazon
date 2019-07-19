@@ -42,7 +42,7 @@ function supervisorMenu() {
                     newDepartment();
                     break;
                 case "Exit":
-                    console.log("Goodbye!");
+                    console.log("\nGoodbye!\n");
                     connection.end();
                     break;
             }
@@ -63,7 +63,7 @@ function backToMenu() {
                 supervisorMenu();
             }
             else {
-                console.log("Goodbye!");
+                console.log("\nGoodbye!\n");
                 connection.end();
             };
         });
@@ -74,7 +74,7 @@ function productSales() {
     var query = "SELECT * FROM departments INNER JOIN products ON products.department_name = departments.department_name;";
     connection.query(query, function(err, res) {
         if (err) throw err;
-        var query2 = "SELECT department_id, department_name, overhead_costs, SUM(product_sales) AS product_sales, SUM(product_sales - overhead_costs) AS total_profit FROM products INNER JOIN departments USING (department_name) GROUP BY  products.department_name;";
+        var query2 = "SELECT department_id AS 'Department ID', department_name AS 'Department Name', overhead_costs AS 'Overhead Costs', SUM(product_sales) AS 'Product Sales', (SUM(product_sales) - overhead_costs) AS 'Total Profit' FROM products INNER JOIN departments USING (department_name) GROUP BY  departments.department_id;";
         connection.query(query2, function(err, res) {
             if (err) throw err;
             var columns = columnify(res, {

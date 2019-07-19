@@ -51,7 +51,7 @@ function mainMenu() {
                 addProduct();
                 break;
             case "Exit":
-                console.log("Goodbye!");
+                console.log("\nGoodbye!\n");
                 connection.end();
                 break;
         };
@@ -72,7 +72,7 @@ function backToMenu() {
                 mainMenu();
             }
             else {
-                console.log("Goodbye!");
+                console.log("\nGoodbye!\n");
                 connection.end();
             };
         });
@@ -80,7 +80,7 @@ function backToMenu() {
 
 // If the manager chooses "View products for sale," display all available products
 function displayProducts() {
-    var display = "SELECT item_id, product_name, price, stock_quantity FROM products;";
+    var display = "SELECT item_id AS 'Item ID', product_name AS 'Product Name', price AS 'Price', stock_quantity AS 'Stock Quantity' FROM products;";
     connection.query(display, function(err, res) {
         if (err) throw err;
         var columns = columnify(res, {
@@ -96,7 +96,7 @@ function displayProducts() {
 
 // If the manager chooses "View low inventory," display all products with inventory < 5
 function lowInventory() {
-    var inventory = "SELECT * FROM products WHERE stock_quantity < 5;";
+    var inventory = "SELECT item_id AS 'Item ID', product_name AS 'Product Name', department_name AS 'Department Name', price AS 'Price', stock_quantity AS 'Stock Quantity', product_sales AS 'Product Sales' FROM products WHERE stock_quantity < 5;";
     connection.query(inventory, function(err, res) {
         if (err) throw err;
         if (res[0]) {
@@ -155,7 +155,7 @@ function addInventory() {
                     connection.query(query3, [answer.quantity, answer.item], function(err, res) {
                         if (err) throw err;
                         console.log("-----------------------------");
-                        console.log("You've added " + answer.quantity + " " + answer.item + "to stock.");
+                        console.log("You've added " + answer.quantity + " " + answer.item + " to stock.");
                         console.log("-----------------------------");
                         // var cost = answer.quantity * res[0].price;
                         // console.log("Your total cost is $" + cost + ".");
@@ -168,64 +168,73 @@ function addInventory() {
 };
 
 // If manager chooses "Add new product," prompt for product information and add to table
+var departmentArr = [];
 function addProduct() {
-   inquirer
-    .prompt([
-        {
-            name: "product",
-            type: "input",
-            message: "What is the name of the product you'd like to add?"
-        },
-        {
-            name: "department",
-            type: "input",
-            message: "What department does this product belong to?" 
-        },
-        {
-            name: "price",
-            type: "input",
-            message: "How much does this product cost?",
-            validate: function(value) {
-                if (isNaN(value) === false && value > 0) {
-                    return true;
-                }
-                return false;
-            }
-        },
-        {
-            name: "quantity",
-            type: "input",
-            message: "How many would you like to stock?",
-            validate: function(value) {
-                if (isNaN(value) === false && value > 0) {
-                    return true;
-                }
-                return false;
-            }
+    var query = "SELECT department_name FROM departments;";
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            departmentArr.push(res[i].department_name);
         }
-    ]) 
-    .then(function(answer) {
-        var query = "INSERT INTO products SET ?;";
-        connection.query(query, 
-            [{
-                product_name: answer.product,
-                department_name: answer.department,
-                price: answer.price,
-                stock_quantity: answer.quantity
-            }], 
-            function(err, res) {
-            if (err) throw err;
-            var query2 = "SELECT * FROM products WHERE product_name = ?;";
-            connection.query(query2, [answer.product], function(err, res) {
+        inquirer
+        .prompt([
+            {
+                name: "product",
+                type: "input",
+                message: "What is the name of the product you'd like to add?"
+            },
+            {
+                name: "department",
+                type: "list",
+                message: "What department does this product belong to?",
+                choices: departmentArr
+            },
+            {
+                name: "price",
+                type: "input",
+                message: "How much does this product cost?",
+                validate: function(value) {
+                    if (isNaN(value) === false && value > 0) {
+                        return true;
+                    }
+                    return false;
+                }
+            },
+            {
+                name: "quantity",
+                type: "input",
+                message: "How many would you like to stock?",
+                validate: function(value) {
+                    if (isNaN(value) === false && value > 0) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        ]) 
+        .then(function(answer) {
+            var query = "INSERT INTO products SET ?;";
+            connection.query(query, 
+                [{
+                    product_name: answer.product,
+                    department_name: answer.department,
+                    price: answer.price,
+                    stock_quantity: answer.quantity
+                }], 
+                function(err, res) {
                 if (err) throw err;
-                var columns = columnify(res, {
-                    columnSplitter: " | ",
-                })
-                console.log("-----------------------------");
-                console.log("You just added:");
-                console.log("-----------------------------");
-                console.log(columns);
-                backToMenu();
+                var query2 = "SELECT item_id AS 'Item ID', product_name AS 'Product Name', department_name AS 'Department Name', price AS 'Price', stock_quantity AS 'Stock Quantity' FROM products WHERE product_name = ?;";
+                connection.query(query2, [answer.product], function(err, res) {
+                    if (err) throw err;
+                    var columns = columnify(res, {
+                        columnSplitter: " | ",
+                    })
+                    console.log("-----------------------------");
+                    console.log("You just added:");
+                    console.log("-----------------------------");
+                    console.log(columns);
+                    backToMenu();
+                });
             });
         });
     });

@@ -23,7 +23,7 @@ connection.connect(function(err) {
 
 // Function to display current items in stock/for sale to the customer
 function runDisplay() {
-    var display = "SELECT item_id, product_name, price FROM products;";
+    var display = "SELECT item_id AS 'Item ID', product_name AS 'Product Name', price AS 'Price' FROM products;";
     connection.query(display, function(err, res) {
         if (err) throw err;
         // console.log(res);
@@ -76,11 +76,11 @@ function runSearch() {
                 // console.log(res);
                 // console.log(res[0].stock_quantity);
                 if (answer.quantity > res[0].stock_quantity) {
-                    console.log("Sorry! It looks like we don't have enough of that item to fulfill your order.");
+                    console.log("\nSorry! It looks like we don't have enough of that item to fulfill your order.\n");
                     exit();
                 }
                 else {
-                    console.log("Congratulations! Here are " + answer.quantity + " " + res[0].product_name + "!");
+                    console.log("\nCongratulations! Here are " + answer.quantity + " " + res[0].product_name + "!");
                     var query2 = "UPDATE products SET stock_quantity = stock_quantity-? WHERE item_id = ?;";
                     connection.query(query2, [answer.quantity, answer.purchase], function(err, res) {
                         if (err) throw err;
@@ -94,7 +94,7 @@ function runSearch() {
                         connection.query(query4, [cost, answer.purchase], function(err, res) {
                             if (err) throw err;
                         })
-                        console.log("Your total cost is: $" + cost);
+                        console.log("Your total cost is: $" + cost + ".\n");
                         exit();
                     });
                 };
@@ -117,7 +117,7 @@ function exit() {
             runSearch();
         }
         else {
-            console.log("Goodbye!");
+            console.log("\nGoodbye!\n");
             connection.end();
         };
     });
