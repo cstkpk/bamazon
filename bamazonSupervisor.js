@@ -92,12 +92,25 @@ function productSales() {
 
 // If supervisor chooses "Create a new department," prompt for information and add to table
 function newDepartment() {
+    var deptArr = [];
+    connection.query("SELECT department_name FROM departments;", function(err, res) {
+        for (var i = 0; i < res.length; i++) {
+            deptArr.push(res[i].department_name);
+        }
+    if (err) throw err;
     inquirer
         .prompt([
             {
                 name: "department",
                 type: "input",
                 message: "What is the name of the department you want to create?",
+                validate: function(value) {
+                    if(deptArr.includes(value)) {
+                        console.log("\nThat department already exists! Please create a new department.");
+                        return false;
+                    }
+                    return true;
+                    }
             },
             {
                 name: "overhead",
@@ -107,6 +120,7 @@ function newDepartment() {
                     if (isNaN(value) === false && value > 0) {
                         return true;
                     }
+                    console.log("\nPlease enter a number greater than 0.");
                     return false;
                 }
             }
@@ -133,4 +147,5 @@ function newDepartment() {
                 backToMenu();
             });
         });
+    });
 };

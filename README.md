@@ -31,4 +31,4 @@
 ![Screenshot #1](screenshot1.png)
 ![Screenshot #2](screenshot2.png)
 
-[Video of Bamazon in action](https://drive.google.com/file/d/1La8DIwED6sp2eB7n5woL2kx1muG6oUVM/view?usp=sharing)
+[Video of Bamazon in action](https://drive.google.com/file/d/1Rwk_zo_xf11pok3JaiWCVUzMvsfNGu_W/view?usp=sharing)

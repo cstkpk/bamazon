@@ -143,6 +143,7 @@ function addInventory() {
                         if (isNaN(value) === false && value > 0) {
                             return true;
                         }
+                        console.log("\nPlease enter a number greater than 0.");
                         return false;
                     }
                 }
@@ -195,6 +196,7 @@ function addProduct() {
                     if (isNaN(value) === false && value > 0) {
                         return true;
                     }
+                    console.log("\nPlease enter a number greater than 0.");
                     return false;
                 }
             },
@@ -206,6 +208,7 @@ function addProduct() {
                     if (isNaN(value) === false && value > 0) {
                         return true;
                     }
+                    console.log("\nPlease enter a number greater than 0.");
                     return false;
                 }
             }
