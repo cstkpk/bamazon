@@ -69,4 +69,5 @@ SELECT * FROM departments INNER JOIN products ON products.department_name = depa
 SELECT department_id, departments.department_name, overhead_costs, product_sales FROM departments INNER JOIN products ON products.department_name = departments.department_name;
 
 SET SQL_SAFE_UPDATES=0;
--- delete from departments where department_name = "Appliances";
+-- delete from products where product_name = "Spoons";
+delete from departments where department_name = "Test2";

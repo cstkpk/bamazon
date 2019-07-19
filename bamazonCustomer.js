@@ -23,6 +23,7 @@ connection.connect(function(err) {
 
 // Function to display current items in stock/for sale to the customer
 function runDisplay() {
+    console.log("\nWelcome to Bamazon! Here is what we have in stock:\n");
     var display = "SELECT item_id AS 'Item ID', product_name AS 'Product Name', price AS 'Price' FROM products;";
     connection.query(display, function(err, res) {
         if (err) throw err;

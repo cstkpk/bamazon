@@ -121,7 +121,7 @@ function newDepartment() {
             function(err, res) {
                 if (err) throw err;
             });
-            var depQuery2 = "SELECT * FROM departments WHERE department_name = ?;";
+            var depQuery2 = "SELECT department_id AS 'Department ID', department_name AS 'Department Name', overhead_costs AS 'Overhead Costs' FROM departments WHERE department_name = ?;";
             connection.query(depQuery2, [answer.department], function(err, res) {
                 var columns = columnify(res, {
                     columnSplitter: " | ",
