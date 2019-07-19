@@ -18,9 +18,9 @@
 
 * As a supervisor:
     - You are first given a menu of possible actions.
-    - If you select "View product sales by department," you will see all products in stock, organized by department, with product sales and total profits listed.
+    - If you select "View product sales by department," you will see all products in stock, organized by department, with product sales and total profits calculated and listed.
     - If you select "Create a new department," you will be able to create a new department. Then, as a manager, you can add new products to this department.
-    -All changes will be reflected in the database.
+    - All changes will be reflected in the database.
 
 * Once you start up the app, Inquirer will use prompts to guide you through all possible functions.
 
